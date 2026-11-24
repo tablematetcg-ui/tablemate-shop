@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tablemate TCG Shop</title>
+<meta name="description" content="One Piece Card Game singles, PSA slabs, and sealed product from Tablemate TCG. DM @tablemate.tcg on Instagram to buy, sell, or trade.">
+<link rel="icon" href="assets/d33fc1ce2723b707d978aaa1853d08d6.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<style id="app-style">/* Layout idea: a vendor's table. Dark ink header band, then a bright card grid where the card art does the talking. */
+:root{
+  --bg:#f2f5fa; --surface:#ffffff; --ink:#0d1b36; --muted:#56627a; --line:#dbe2ee;
+  --accent:#f6b519; --accent-ink:#0d1b36; --blue:#1f6fe0; --gold:#f6b519; --red:#d8322a; --band:#0d1b36; --band-ink:#f2f5fa; --tile:#e6ecf6;
+  --display:"Bricolage Grotesque","Avenir Next",system-ui,sans-serif;
+  --body:"Instrument Sans","Segoe UI",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --r:14px; color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0a1428; --surface:#112040; --ink:#eef2f9; --muted:#9eabc4; --line:#21345a;
+  --accent:#f6b519; --accent-ink:#0d1b36; --blue:#5b9bff; --gold:#f6c23e; --red:#ff5a4d; --band:#071023; --band-ink:#eef2f9; --tile:#17294d; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0a1428; --surface:#112040; --ink:#eef2f9; --muted:#9eabc4; --line:#21345a;
+  --accent:#f6b519; --accent-ink:#0d1b36; --blue:#5b9bff; --gold:#f6c23e; --red:#ff5a4d; --band:#071023; --band-ink:#eef2f9; --tile:#17294d; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 var(--body);-webkit-font-smoothing:antialiased}
+body.locked{overflow:hidden}
+img{max-width:100%;display:block}
+a{color:inherit}
+h1,h2{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+.wrap{max-width:1240px;margin:0 auto;padding:0 20px}
+.sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:6px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 18px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:600 15px/1 var(--body);text-decoration:none;cursor:pointer;transition:transform .12s ease,background .12s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:transparent}
+.btn.small{min-height:34px;padding:0 12px;font-size:13px}
+.btn.wide{width:100%}
+.btn[disabled]{opacity:.55;cursor:default;transform:none}
+
+.ownerbar{background:var(--gold);color:#1d1503;font-size:13px}
+.ob-in{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:8px 20px}
+.ob-in .btn{background:#1d1503;color:#fff3d1;border-color:#1d1503}
+.ob-msg{font-weight:600}
+
+.top{background:var(--band);color:var(--band-ink)}
+.top-in{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:14px;padding-bottom:14px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.mark{height:46px;width:auto}
+.hero-side{display:grid;gap:18px;justify-items:center}
+.hero-logo{width:min(100%,300px);height:auto;filter:drop-shadow(0 10px 24px rgba(0,0,0,.35))}
+.foot-brand{display:inline-flex;align-items:center;gap:8px;font-weight:600;color:var(--ink)}
+.foot-brand img{height:26px;width:auto}
+.word{font:800 23px/1 var(--display);letter-spacing:-.02em;font-style:italic}
+.tcg{font:800 13px/1 var(--display);font-style:normal;margin-left:7px;padding:4px 7px;border-radius:6px;background:var(--gold);color:var(--band);vertical-align:3px;letter-spacing:.06em}
+.btn.ig{background:transparent;color:var(--band-ink);border-color:rgba(255,255,255,.28)}
+.hero{background:radial-gradient(900px 420px at 85% 30%,color-mix(in srgb,var(--blue) 35%,transparent),transparent 70%),var(--band)}
+
+.hero{color:var(--band-ink);padding:26px 0 40px}
+.hero-in{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:40px;align-items:center}
+.kicker{font:500 12px/1 var(--mono);text-transform:uppercase;letter-spacing:.12em;color:var(--gold);margin:0 0 12px}
+.hero h1{font-size:clamp(30px,4.6vw,52px);line-height:1.04;font-weight:800;max-width:18ch}
+.lede{color:color-mix(in srgb,var(--band-ink) 78%,transparent);max-width:58ch;margin:16px 0 22px;font-size:17px}
+.hero-cta{display:flex;gap:10px;flex-wrap:wrap}
+.hero .btn.ghost{color:var(--band-ink);border-color:rgba(255,255,255,.28)}
+.stats{width:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;margin:0;background:rgba(255,255,255,.14);border-radius:var(--r);overflow:hidden}
+.stats div{background:var(--band);padding:16px 18px;background:color-mix(in srgb,var(--band) 88%,#fff)}
+.stats dt{font:500 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.1em;opacity:.7}
+.stats dd{margin:8px 0 0;font:800 34px/1 var(--display);font-variant-numeric:tabular-nums}
+.updated{grid-column:1/-1;margin:0;padding:10px 18px;font-size:13px;background:color-mix(in srgb,var(--band) 88%,#fff);opacity:.85}
+
+.shop{padding-top:26px;padding-bottom:48px}
+.controls{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;position:sticky;top:0;z-index:5;background:var(--bg);padding:12px 0;border-bottom:1px solid var(--line)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:600 14px/1 var(--body);cursor:pointer}
+.tab .ct{font:500 12px/1 var(--mono);color:var(--muted)}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.tab[aria-selected="true"] .ct{color:inherit;opacity:.7}
+.tools{display:flex;gap:10px;flex-wrap:wrap;flex:1;justify-content:flex-end}
+.search{display:flex;align-items:center;gap:8px;min-height:40px;padding:0 14px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--muted);flex:1;min-width:220px;max-width:380px}
+.search input{border:0;background:transparent;color:var(--ink);font:15px var(--body);width:100%;outline:none}
+.sort select{min-height:40px;padding:0 14px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);font:500 14px var(--body)}
+.count{color:var(--muted);font-size:14px;margin:14px 0}
+
+.grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(196px,1fr));gap:18px}
+.card-btn{all:unset;box-sizing:border-box;display:flex;flex-direction:column;width:100%;height:100%;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:transform .16s ease,box-shadow .16s ease}
+.card-btn:hover{transform:translateY(-3px);box-shadow:0 14px 30px -18px rgba(14,23,38,.45)}
+.card-btn:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.art-wrap{position:relative;background:var(--tile);aspect-ratio:5/6;display:grid;place-items:center;padding:14px}
+.art{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 6px 10px rgba(0,0,0,.18))}
+.ph{display:flex;flex-direction:column;justify-content:flex-end;gap:auto;aspect-ratio:5/7;height:100%;width:auto;max-width:100%;padding:12px;border-radius:10px;background:linear-gradient(160deg,var(--band),color-mix(in srgb,var(--band) 55%,var(--blue)));color:var(--band-ink);filter:none}
+.ph-kind{font:500 10px/1 var(--mono);text-transform:uppercase;letter-spacing:.12em;color:var(--gold)}
+.ph-num{font:800 22px/1 var(--display);margin-bottom:auto;margin-top:auto}
+.ph-name{font:600 13px/1.25 var(--body)}
+.grade{position:absolute;top:10px;left:10px;font:600 11px/1 var(--mono);padding:6px 8px;border-radius:6px;background:var(--blue);color:#fff;letter-spacing:.04em}
+.grade.sealed{background:var(--ink);color:var(--bg)}
+.qty{position:absolute;bottom:10px;right:10px;font:500 11px/1 var(--mono);padding:5px 7px;border-radius:6px;background:var(--surface);color:var(--ink);border:1px solid var(--line)}
+.meta{display:flex;flex-direction:column;gap:3px;padding:12px 14px 14px;flex:1}
+.num{font:500 12px/1.2 var(--mono);color:var(--muted)}
+.name{font:700 16px/1.25 var(--display)}
+.ver{font-size:13px;color:var(--muted);line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.row{margin-top:auto;padding-top:8px}
+.price{font:800 19px/1 var(--display);font-variant-numeric:tabular-nums}
+.price.ask{font:600 14px/1 var(--body);color:var(--blue)}
+.price.big{font-size:32px}
+.price.ask.big{font-size:18px}
+.empty{grid-column:1/-1;padding:40px;text-align:center;color:var(--muted);background:var(--surface);border:1px dashed var(--line);border-radius:var(--r)}
+
+.sell{background:var(--surface);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.sell-in{display:flex;justify-content:space-between;align-items:center;gap:24px;padding-top:34px;padding-bottom:34px;flex-wrap:wrap}
+.sell h2{font-size:28px}
+.sell p{color:var(--muted);max-width:60ch;margin:8px 0 0}
+.share{border-bottom:1px solid var(--line)}
+.share-in{display:flex;align-items:center;gap:28px;padding-top:34px;padding-bottom:34px;flex-wrap:wrap}
+.qr-box{width:150px;height:150px;padding:10px;background:#fff;border-radius:12px;flex:none;box-shadow:0 6px 18px rgba(0,0,0,.18)}
+.qr-svg{width:100%;height:100%;display:block}
+.share h2{font-size:28px}
+.share p{color:var(--muted);max-width:52ch;margin:8px 0 14px}
+.share-link{font:600 18px/1.2 var(--mono);color:var(--ink);display:inline-block;margin-bottom:14px;word-break:break-all}
+.share-btns{display:flex;gap:10px;flex-wrap:wrap}
+.foot{color:var(--muted);font-size:13px}
+.foot-in{display:flex;gap:16px;justify-content:space-between;flex-wrap:wrap;padding-top:22px;padding-bottom:30px}
+
+.modal{position:fixed;inset:0;z-index:20;display:grid;place-items:center;padding:16px}
+.modal[hidden]{display:none}
+.scrim{position:absolute;inset:0;background:rgba(6,10,18,.62)}
+.sheet{position:relative;background:var(--surface);border-radius:20px;max-width:940px;width:100%;max-height:calc(100% - 8px);overflow:auto;padding:26px}
+.x{position:absolute;top:10px;right:12px;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:24px;line-height:1;cursor:pointer;z-index:1}
+.m-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:30px}
+.m-main{background:var(--tile);border-radius:var(--r);padding:22px;display:grid;place-items:center;aspect-ratio:5/6}
+.m-main img,.m-main .art{max-height:100%;width:auto;max-width:100%;object-fit:contain}
+.art.big{height:100%}
+.thumbs{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.thumb{width:58px;height:58px;padding:3px;border-radius:10px;border:2px solid var(--line);background:var(--tile);cursor:pointer}
+.thumb.on{border-color:var(--blue)}
+.thumb img{width:100%;height:100%;object-fit:cover;border-radius:6px}
+.artnote{font-size:12px;color:var(--muted);margin:10px 0 0}
+.m-info h2{font-size:32px;line-height:1.1}
+.m-ver{color:var(--muted);margin:6px 0 16px}
+.m-price{padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.specs{margin:14px 0 18px;display:grid;gap:0}
+.specs div{display:grid;grid-template-columns:130px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid var(--line)}
+.specs dt{color:var(--muted);font-size:14px}
+.specs dd{margin:0;font-weight:500}
+.m-cta{display:grid;gap:10px}
+.fine{font-size:13px;color:var(--muted);margin:12px 0 0}
+.owner-tools{margin-top:18px;padding:12px;border:1px dashed var(--gold);border-radius:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.ot-title{width:100%;margin:0;font:500 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.1em;color:var(--gold)}
+.ot-note{font-size:12px;color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:12px;font-size:14px;z-index:30;max-width:calc(100% - 32px)}
+.toast[hidden]{display:none}
+
+.shows{padding:30px 0 6px}
+.shows-head{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.shows-head h2{font-size:28px}
+.shows-head p{margin:0;color:var(--muted);max-width:52ch}
+.show-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.show{display:flex;gap:16px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.show-date{flex:none;width:86px;border-radius:12px;background:var(--band);color:var(--band-ink);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 6px;text-align:center}
+.sd-mon{font:500 12px/1 var(--mono);letter-spacing:.12em;color:var(--gold)}
+.sd-days{font:800 22px/1.05 var(--display);margin-top:6px;font-variant-numeric:tabular-nums}
+.show-body h3{margin:0;font:700 19px/1.2 var(--display)}
+.show-body p{margin:4px 0 0;font-size:14px}
+.show-when{font-weight:600}
+.show-where{color:var(--muted)}
+.show-where a{color:var(--blue)}
+.show-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px!important}
+.tag{font:500 12px/1 var(--mono);padding:6px 8px;border-radius:6px;background:var(--tile);color:var(--ink);text-decoration:none}
+.tag.link{color:var(--blue)}
+@media (max-width:820px){
+  .hero-in{grid-template-columns:1fr;gap:24px}
+  .hero-side{order:-1}
+  .hero-logo{width:min(70%,240px)}
+  .m-grid{grid-template-columns:1fr}
+  .m-main{aspect-ratio:auto;max-height:52vh}
+}
+@media (max-width:480px){
+  .wrap{padding:0 16px}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .meta{padding:10px}
+  .name{font-size:14px}
+  .price{font-size:16px}
+  .btn.ig span{display:none}
+  .stats dd{font-size:28px}
+  .sheet{padding:18px}
+  .specs div{grid-template-columns:110px 1fr}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="application/json" id="state">{"items":[{"id":"peter","name":"St. Shepherd Ju Peter","num":"OP13-084","ver":"Alternate Art","set":"Carrying On His Will","kind":"raw","grade":"","qty":1,"ask":11.41,"status":"sale","added":null,"order":1},{"id":"foxy","name":"Foxy","num":"OP07-071","ver":"Alternate Art (TCGplayer lists it as Parallel)","set":"500 Years in the Future","kind":"raw","grade":"","qty":1,"ask":6.64,"status":"sale","added":null,"order":2},{"id":"luffy","name":"Monkey.D.Luffy","num":"P-110","ver":"4th Anniversary LEGO art, non foil","set":"One Piece Promotion Cards","kind":"raw","grade":"","qty":1,"ask":7.92,"status":"sale","added":null,"order":3},{"id":"gloriosa","name":"Gloriosa","num":"OP17-046","ver":"Alternate Art","set":"The World's Strongest Warriors","kind":"raw","grade":"","qty":1,"ask":14.66,"status":"sale","added":null,"order":4},{"id":"rocks","name":"Rocks.D.Xebec","num":"OP17-039","ver":"Alternate Art Leader","set":"The World's Strongest Warriors","kind":"raw","grade":"","qty":1,"ask":27.66,"status":"sale","added":null,"order":6},{"id":"buggy","name":"Buggy","num":"OP09-051","ver":"Alternate Art","set":"Emperors in the New World","kind":"raw","grade":"","qty":1,"ask":23.09,"status":"sale","added":null,"order":7},{"id":"kalifa","name":"Kalifa","num":"EB01-031","ver":"Alternate Art","set":"Memorial Collection","kind":"raw","grade":"","qty":2,"ask":15.39,"status":"sale","added":null,"order":8},{"id":"don","name":"DON!! Card","num":"DON!!","ver":"English Version 2nd Anniversary Set","set":"One Piece Promotion Cards","kind":"raw","grade":"","qty":4,"ask":5.09,"status":"sale","added":null,"order":9},{"id":"franky2","name":"Franky","num":"OP07-107","ver":"Alternate Art (TCGplayer lists it as Parallel)","set":"500 Years in the Future","kind":"raw","grade":"","qty":1,"ask":4.98,"status":"sale","added":null,"order":12},{"id":"disap","name":"Disappointed?","num":"OP14-099","ver":"Premium Card Collection Best Selection","set":"One Piece Promotion Cards","kind":"raw","grade":"","qty":1,"ask":20.18,"status":"sale","added":null,"order":13},{"id":"rebeccaB","name":"Rebecca","num":"OP05-091","ver":"SP, Premium Booster printing","set":"Premium Booster The Best","kind":"raw","grade":"","qty":1,"ask":77.3,"status":"sale","added":null,"order":14},{"id":"sakazuki","name":"Sakazuki","num":"OP16-065","ver":"Alternate Art","set":"The Time of Battle","kind":"raw","grade":"","qty":1,"ask":11.55,"status":"sale","added":null,"order":15},{"id":"foxyL","name":"Foxy","num":"OP07-059","ver":"Alternate Art Leader (TCGplayer lists it as Parallel)","set":"500 Years in the Future","kind":"raw","grade":"","qty":1,"ask":26.04,"status":"sale","added":null,"order":16},{"id":"otama","name":"Otama","num":"PRB02-016","ver":"Alternate Art","set":"Premium Booster The Best Vol. 2","kind":"raw","grade":"","qty":1,"ask":8.41,"status":"sale","added":null,"order":17},{"id":"nami2","name":"Nami","num":"OP14-031","ver":"Alternate Art","set":"The Azure Sea's Seven","kind":"raw","grade":"","qty":1,"ask":62.19,"status":"sale","added":null,"order":18},{"id":"stussy2","name":"Stussy","num":"OP07-085","ver":"Alternate Art (TCGplayer lists it as Parallel)","set":"500 Years in the Future","kind":"raw","grade":"","qty":1,"ask":16.74,"status":"sale","added":null,"order":20},{"id":"hancock3","name":"Boa Hancock","num":"EB03-026","ver":"Alternate Art","set":"One Piece Heroines Edition","kind":"raw","grade":"","qty":1,"ask":23.86,"status":"sale","added":null,"order":21},{"id":"maria","name":"Black Maria","num":"ST04-011","ver":"Championship 2023 Celebration Pack","set":"One Piece Promotion Cards","kind":"raw","grade":"","qty":1,"ask":48.16,"status":"sale","added":null,"order":22},{"id":"brook","name":"Brook","num":"OP15-022","ver":"Alternate Art Leader","set":"Adventure on Kami's Island","kind":"raw","grade":"","qty":1,"ask":44.35,"status":"sale","added":null,"order":23},{"id":"newgate","name":"Edward.Newgate","num":"OP13-042","ver":"Alternate Art","set":"Carrying On His Will","kind":"raw","grade":"","qty":1,"ask":12.03,"status":"sale","added":null,"order":25},{"id":"buggyL","name":"Buggy","num":"OP16-041","ver":"Alternate Art Leader","set":"The Time of Battle","kind":"raw","grade":"","qty":1,"ask":11,"status":"sale","added":null,"order":26},{"id":"king","name":"King","num":"EB04-031","ver":"Alternate Art","set":"The Azure Sea's Seven","kind":"raw","grade":"","qty":1,"ask":29.86,"status":"sale","added":null,"order":27},{"id":"mama","name":"Mamaragan","num":"OP15-078","ver":"Alternate Art","set":"Adventure on Kami's Island","kind":"raw","grade":"","qty":1,"ask":53.63,"status":"sale","added":null,"order":28},{"id":"croc","name":"Crocodile","num":"OP14-120","ver":"Alternate Art","set":"The Azure Sea's Seven","kind":"raw","grade":"","qty":1,"ask":42.51,"status":"sale","added":null,"order":29},{"id":"juurou","name":"Zoro-Juurou","num":"OP05-067","ver":"Alternate Art","set":"Awakening of the New Era","kind":"raw","grade":"","qty":1,"ask":22.35,"status":"sale","added":null,"order":30},{"id":"teachS","name":"Marshall.D.Teach","num":"OP16-119","ver":"Secret Rare","set":"The Time of Battle","kind":"raw","grade":"","qty":1,"ask":23.38,"status":"sale","added":null,"order":31},{"id":"luffy12","name":"Monkey.D.Luffy","num":"OP12-015","ver":"Alternate Art","set":"Legacy of the Master","kind":"raw","grade":"","qty":2,"ask":15.33,"status":"sale","added":null,"order":32},{"id":"zoroSP","name":"Roronoa Zoro","num":"EB04-007","ver":"SP","set":"The World's Strongest Warriors","kind":"raw","grade":"","qty":1,"ask":347.57,"status":"sale","added":null,"order":33},{"id":"juurouB","name":"Zoro-Juurou","num":"ST18-004","ver":"SP, Legacy of the Master printing","set":"Legacy of the Master","kind":"raw","grade":"","qty":1,"ask":184,"status":"sale","added":null,"order":34},{"id":"sanji","name":"Sanji & Pudding","num":"EB02-035","ver":"Alternate Art","set":"Anime 25th Collection","kind":"raw","grade":"","qty":1,"ask":49,"status":"sale","added":null,"order":36},{"id":"usopp","name":"Usopp","num":"OP01-004","ver":"English Version 1st Anniversary Set","set":"One Piece Promotion Cards","kind":"raw","grade":"","qty":1,"ask":42.32,"status":"sale","added":null,"order":37},{"id":"shirahoshi","name":"Shirahoshi","num":"EB01-057","ver":"SP","set":"A Fist of Divine Speed","kind":"raw","grade":"","qty":1,"ask":94.49,"status":"sale","added":null,"order":38},{"id":"law10","name":"Trafalgar Law","num":"OP10-119","ver":"SP","set":"Premium Booster The Best Vol. 2","kind":"raw","grade":"","qty":1,"ask":90.99,"status":"sale","added":null,"order":42},{"id":"myera","name":"My Era...Begins!!","num":"OP09-096","ver":"Alternate Art","set":"Premium Booster The Best Vol. 2","kind":"raw","grade":"","qty":1,"ask":240,"status":"sale","added":null,"order":44},{"id":"divine","name":"Divine Departure","num":"OP13-076","ver":"Alternate Art","set":"Carrying On His Will","kind":"raw","grade":"","qty":1,"ask":53.96,"status":"sale","added":null,"order":45},{"id":"zoroLA","name":"Roronoa Zoro","num":"OP01-001","ver":"Alternate Art Leader, Romance Dawn printing","set":"Romance Dawn","kind":"raw","grade":"","qty":1,"ask":589.98,"status":"sale","added":null,"order":46},{"id":"buggySP","name":"Buggy","num":"P-084","ver":"SP","set":"The World's Strongest Warriors","kind":"raw","grade":"","qty":1,"ask":122.85,"status":"sale","added":null,"order":47},{"id":"namiC","name":"Nami","num":"OP09-050","ver":"Championship 25-26 Regionals Season 1","set":"One Piece Promotion Cards","kind":"raw","grade":"","qty":1,"ask":null,"status":"check","added":null,"order":49},{"id":"bonney2","name":"Jewelry Bonney","num":"ST21-004","ver":"Alternate Art (TCGplayer lists it as Parallel)","set":"ST-21 Starter Deck","kind":"raw","grade":"","qty":1,"ask":6.36,"status":"sale","added":null,"order":52},{"id":"luffyMag","name":"Monkey.D.Luffy","num":"ST21-014","ver":"Japanese ONE PIECE Magazine Vol. 20 promo, card only","set":"Japanese promo (eBay comps)","kind":"raw","grade":"","qty":1,"ask":null,"status":"sale","added":null,"order":53},{"id":"benn","name":"Benn.Beckman","num":"OP09-009","ver":"Alternate Art (TCGplayer lists it as Parallel)","set":"Emperors in the New World","kind":"raw","grade":"","qty":1,"ask":5.76,"status":"sale","added":null,"order":54},{"id":"hodyA","name":"Hody Jones","num":"OP06-035","ver":"Alternate Art, Wings of the Captain printing","set":"Wings of the Captain","kind":"raw","grade":"","qty":1,"ask":7.91,"status":"sale","added":null,"order":55},{"id":"roger","name":"Gol.D.Roger","num":"OP09-118","ver":"Secret Rare","set":"Emperors in the New World","kind":"raw","grade":"","qty":1,"ask":17.65,"status":"sale","added":null,"order":56},{"id":"namiPRB","name":"Nami","num":"PRB02-012","ver":"Alternate Art","set":"Premium Booster The Best Vol. 2","kind":"raw","grade":"","qty":1,"ask":30,"status":"sale","added":null,"order":57},{"id":"namiGift","name":"Nami","num":"OP01-016","ver":"Gift Collection 2023","set":"One Piece Promotion Cards","kind":"raw","grade":"","qty":1,"ask":63.02,"status":"sale","added":null,"order":59},{"id":"vivi","name":"Nefeltari Vivi","num":"OP04-118","ver":"Alternate Art","set":"Kingdoms of Intrigue","kind":"raw","grade":"","qty":1,"ask":20.12,"status":"sale","added":null,"order":60},{"id":"boaL","name":"Boa Hancock","num":"OP07-038","ver":"Alternate Art Leader (TCGplayer lists it as Parallel)","set":"500 Years in the Future","kind":"raw","grade":"","qty":1,"ask":83.99,"status":"sale","added":null,"order":62},{"id":"s_fest","name":"Monkey.D.Luffy","num":"#073 (P-073)","ver":"Bandai Card Games Fest 25-26 promo","set":"2025 One Piece Promos","kind":"slab","grade":"PSA 10","qty":1,"ask":null,"status":"sale","added":null,"order":63},{"id":"s_allsunday","name":"Ms. All Sunday","num":"OP14-084","ver":"SP (Special Alternate Art) from The Time of Battle","set":"2026 One Piece OP16","kind":"slab","grade":"PSA 10","qty":1,"ask":null,"status":"sale","added":null,"order":64},{"id":"s_sanji","name":"Sanji","num":"OP01-013","ver":"Alternate Art Errata","set":"2022 One Piece OP01","kind":"slab","grade":"PSA 10","qty":1,"ask":null,"status":"sale","added":null,"order":65},{"id":"s_dodger","name":"DON!! Card","num":"DON!!","ver":"Dodgers x One Piece Night","set":"2026 One Piece Promos","kind":"slab","grade":"PSA 10","qty":1,"ask":null,"status":"sale","added":null,"order":66},{"id":"s_dodgerPC","name":"DON!! Card","num":"DON!!","ver":"Dodgers x One Piece Night","set":"2026 One Piece Promos","kind":"slab","grade":"PSA 10","qty":1,"ask":null,"status":"sale","added":null,"order":66.5},{"id":"s_chopper","name":"Tony Tony.Chopper","num":"#065 (P-065)","ver":"CS 25-26 Event Pack","set":"2025 One Piece Promos","kind":"slab","grade":"PSA 10","qty":1,"ask":null,"status":"sale","added":null,"order":67},{"id":"s_nami","name":"Nami","num":"OP01-016","ver":"Premium Card Collection 25th Anniversary Edition","set":"2023 One Piece Promos","kind":"slab","grade":"PSA 10","qty":1,"ask":null,"status":"sale","added":null,"order":68},{"id":"s_ace","name":"Portgas.D.Ace","num":"ST13-011","ver":"SP (Special Alternate Art) from Legacy of the Master","set":"2025 One Piece OP12","kind":"slab","grade":"PSA 10","qty":1,"ask":null,"status":"sale","added":null,"order":69},{"id":"s_luffyEB","name":"Monkey.D.Luffy","num":"EB02-061","ver":"Alternate Art","set":"2025 One Piece EB02 Anime 25th Collection","kind":"slab","grade":"PSA 10","qty":1,"ask":null,"status":"sale","added":null,"order":70},{"id":"s_demon","name":"Demon Aura Nine Sword Style Asura Blades Drawn Dead Man's Game","num":"OP12-037","ver":"Alternate Art","set":"2025 One Piece OP12","kind":"slab","grade":"PSA 10","qty":1,"ask":null,"status":"sale","added":null,"order":71},{"id":"luffyW110","name":"Monkey.D.Luffy","num":"P-110","ver":"4th Anniversary LEGO art, OP17 Release Event Winner (foil)","set":"One Piece Promotion Cards","kind":"raw","grade":"","qty":1,"ask":186.69,"status":"sale","added":null,"order":74},{"id":"luffyW135","name":"Monkey.D.Luffy","num":"P-135","ver":"OP16 Release Event Winner","set":"One Piece Promotion Cards","kind":"raw","grade":"","qty":1,"ask":58.46,"status":"sale","added":null,"order":75},{"id":"namiW102","name":"Nami","num":"P-102","ver":"Winner Pack 2026 Vol. 2","set":"One Piece Promotion Cards","kind":"raw","grade":"","qty":1,"ask":16.29,"status":"sale","added":null,"order":78},{"id":"t_sanji2","name":"Sanji","num":"OP07-064","ver":"English print from the Japanese 2nd Anniversary Set","set":"2025 One Piece EN, JP 2nd Anniversary Set","kind":"slab","grade":"PSA 10","qty":1,"ask":null,"status":"sale","added":null,"order":79},{"id":"t_ace13","name":"Portgas.D.Ace","num":"OP13-119","ver":"Wanted Poster SP, misprint (error text)","set":"2025 One Piece OP13 Carrying On His Will","kind":"slab","grade":"PSA 10","qty":1,"ask":null,"status":"sale","added":null,"order":81},{"id":"t_luffyRD","name":"Monkey.D.Luffy","num":"OP01-024","ver":"Alternate Art, Romance Dawn (2022)","set":"2022 One Piece OP01 Romance Dawn","kind":"slab","grade":"PSA 10","qty":1,"ask":null,"status":"sale","added":null,"order":82},{"id":"t_fest041","name":"Monkey.D.Luffy","num":"P-041","ver":"Bandai Card Games Fest 23-24, #041","set":"2024 One Piece Promos","kind":"slab","grade":"PSA 10","qty":1,"ask":null,"status":"sale","added":null,"order":83},{"id":"t_pre16","name":"Monkey.D.Luffy","num":"P-135","ver":"The Time of Battle Release Event Winner","set":"2026 One Piece Promos","kind":"slab","grade":"PSA 10","qty":1,"ask":null,"status":"sale","added":null,"order":84},{"id":"t_newgate","name":"Edward.Newgate","num":"ST15-002","ver":"SP (Special Alternate Art) from Royal Blood","set":"2025 One Piece OP10","kind":"slab","grade":"PSA 10","qty":1,"ask":null,"status":"sale","added":null,"order":87},{"id":"t_bonney","name":"Jewelry Bonney","num":"ST02-007","ver":"SP (Special Alternate Art) from Two Legends","set":"2024 One Piece OP08","kind":"slab","grade":"PSA 10","qty":1,"ask":null,"status":"sale","added":null,"order":88},{"id":"t_mag","name":"Monkey.D.Luffy","num":"ST21-014","ver":"ONE PIECE Magazine Vol. 20 promo, Japanese","set":"2025 One Piece Japanese","kind":"slab","grade":"PSA 10","qty":2,"ask":null,"status":"sale","added":null,"order":89},{"id":"t_ace2jp","name":"Portgas.D.Ace","num":"OP02-013","ver":"Japanese 2nd Anniversary Set","set":"2025 One Piece Japanese 2nd Anniversary Set","kind":"slab","grade":"PSA 10","qty":1,"ask":null,"status":"sale","added":null,"order":92},{"id":"t_p001","name":"Monkey.D.Luffy","num":"P-001","ver":"Premium Card Collection 25th Anniversary Edition","set":"2023 One Piece Promos","kind":"slab","grade":"PSA 10","qty":1,"ask":null,"status":"sale","added":null,"order":93},{"id":"t_gear","name":"Gear Two","num":"OP11-080","ver":"Alternate Art","set":"2025 One Piece OP11 A Fist of Divine Speed","kind":"slab","grade":"BGS 10 Pristine","qty":1,"ask":null,"status":"sale","added":null,"order":94},{"id":"t_mihawkM","name":"Dracule Mihawk","num":"OP14-119","ver":"Manga Rare (Manga Alt Art SEC) from The Azure Sea's Seven","set":"The Azure Sea's Seven","kind":"slab","grade":"PSA 10","qty":1,"ask":null,"status":"sale","added":null,"order":95},{"id":"t_gear2","name":"Gear Two","num":"OP11-080","ver":"Alternate Art","set":"A Fist of Divine Speed","kind":"slab","grade":"PSA 10","qty":1,"ask":null,"status":"sale","added":null,"order":100},{"id":"linlinA","name":"Charlotte Linlin","num":"OP17-049","ver":"Alternate Art, pulled from the OP17 tin packs","set":"","kind":"raw","grade":"","qty":1,"ask":12.18,"status":"sale","added":"2026-11-05","order":110},{"id":"rocksSEC","name":"Rocks.D.Xebec","num":"OP17-118","ver":"Secret Rare, pulled from the OP17 tin packs","set":"","kind":"raw","grade":"","qty":1,"ask":11.4,"status":"sale","added":"2026-11-05","order":111},{"id":"violaA","name":"Viola","num":"EB01-052","ver":"Alternate Art","set":"","kind":"raw","grade":"","qty":1,"ask":9.49,"status":"sale","added":"2026-11-06","order":112},{"id":"linlin112A","name":"Charlotte Linlin","num":"OP17-112","ver":"Alternate Art","set":"","kind":"raw","grade":"","qty":1,"ask":14.52,"status":"sale","added":"2026-11-06","order":113},{"id":"sugarA","name":"Sugar","num":"OP04-024","ver":"Alternate Art (Kingdoms of Intrigue)","set":"","kind":"raw","grade":"","qty":1,"ask":4.99,"status":"sale","added":"2026-11-06","order":115},{"id":"mr2SEC","name":"Mr.2.Bon.Kurei(Bentham)","num":"EB01-061","ver":"Secret Rare (Memorial Collection printing)","set":"","kind":"raw","grade":"","qty":3,"ask":14.63,"status":"sale","added":"2026-11-06","order":116},{"id":"baseShopV1","name":"Base Shop Limited Card Collection Vol.1","num":"BASE SHOP","ver":"Japanese, sealed (ONE PIECE BASE SHOP exclusive)","set":"","kind":"sealed","grade":"","qty":2,"ask":null,"status":"sale","added":"2026-11-06","order":117},{"id":"kaidoA","name":"Kaido","num":"OP17-062","ver":"Alternate Art","set":"The World's Strongest Warriors","kind":"raw","grade":"","qty":1,"ask":10.25,"status":"sale","added":"2026-11-08","order":1794204900001},{"id":"jozuRP","name":"Jozu","num":"OP08-047","ver":"Regional Participation Pack 2026 Vol.2","set":"One Piece Promotion Cards","kind":"raw","grade":"","qty":2,"ask":22.96,"status":"sale","added":"2026-11-08","order":1794204900002},{"id":"odenRP","name":"Kouzuki Oden","num":"OP14-026","ver":"Regional Participation Pack 2026 Vol.2","set":"One Piece Promotion Cards","kind":"raw","grade":"","qty":1,"ask":7.98,"status":"sale","added":"2026-11-08","order":1794204900003},{"id":"shanksL17","name":"Shanks","num":"OP17-020","ver":"Alternate Art Leader","set":"The World's Strongest Warriors","kind":"raw","grade":"","qty":1,"ask":14.65,"status":"sale","added":"2026-11-08","order":1794204900004},{"id":"lawEP7","name":"Trafalgar Law","num":"P-088","ver":"Event Pack Vol. 7","set":"One Piece Promotion Cards","kind":"raw","grade":"","qty":1,"ask":13.64,"status":"sale","added":"2026-11-08","order":1794204900005},{"id":"luffyEP9","name":"Monkey.D.Luffy","num":"P-108","ver":"Event Pack Vol. 9","set":"One Piece Promotion Cards","kind":"raw","grade":"","qty":1,"ask":8.01,"status":"sale","added":"2026-11-08","order":1794204900006},{"id":"sanjiP64","name":"Sanji","num":"OP07-064","ver":"Alternate Art (TCGplayer lists it as Parallel)","set":"500 Years in the Future","kind":"raw","grade":"","qty":2,"ask":15.23,"status":"sale","added":"2026-11-15","order":1794900000001},{"id":"toySoldier","name":"One-Legged Toy Soldier","num":"OP05-081","ver":"Alternate Art","set":"Premium Booster The Best","kind":"raw","grade":"","qty":1,"ask":32.06,"status":"sale","added":"2026-11-15","order":1794900000002},{"id":"luffy92","name":"Monkey.D.Luffy","num":"OP15-092","ver":"Alternate Art","set":"Adventure on Kami's Island","kind":"raw","grade":"","qty":1,"ask":23.56,"status":"sale","added":"2026-11-15","order":1794900000003},{"id":"allsundaySPbgs","name":"Ms. All Sunday","num":"OP04-064","ver":"SP, Wings of the Captain printing","set":"Wings of the Captain","kind":"slab","grade":"BGS 10 Pristine","qty":1,"ask":null,"status":"sale","added":"2026-11-15","order":1794900000004},{"id":"namiBS4","name":"Nami","num":"OP09-070","ver":"Premium Card Collection Best Selection Vol. 4","set":"One Piece Promotion Cards","kind":"raw","grade":"","qty":1,"ask":59.37,"status":"sale","added":"2026-11-15","order":1794900000005},{"id":"s_demon2","name":"Demon Aura Nine Sword Style Asura Blades Drawn Dead Man's Game","num":"OP12-037","ver":"Alternate Art","set":"2025 One Piece OP12","kind":"slab","grade":"PSA 10","qty":1,"ask":null,"status":"sale","added":"2026-11-15","order":1794900000006},{"id":"okikuFest","name":"Okiku","num":"OP01-035","ver":"Premium Card Collection Bandai Card Games Fest 23-24","set":"One Piece Promotion Cards","kind":"raw","grade":"","qty":1,"ask":2.53,"status":"sale","added":"2026-11-15","order":1794900000008},{"id":"chopper1st","name":"Tony Tony.Chopper","num":"ST01-006","ver":"English Version 1st Anniversary Set (Lightly Played)","set":"One Piece Promotion Cards","kind":"raw","grade":"","qty":1,"ask":575.61,"status":"sale","added":"2026-11-15","order":1794900000009},{"id":"teachL80","name":"Marshall.D.Teach","num":"OP16-080","ver":"Alternate Art Leader","set":"The Time of Battle","kind":"raw","grade":"","qty":1,"ask":13.77,"status":"sale","added":"2026-11-15","order":1794900000011},{"id":"t_kuzanM","name":"Kuzan","num":"OP16-063","ver":"Manga Rare (Manga Alt Art) from The Time of Battle","set":"The Time of Battle","kind":"slab","grade":"PSA 10","qty":1,"ask":null,"status":"sale","added":"2026-11-15","order":1794900000012},{"id":"t_chopReg","name":"Tony Tony.Chopper","num":"OP01-015","ver":"2024 Offline Regionals Pack Vol. 3","set":"One Piece Promotion Cards","kind":"slab","grade":"PSA 10","qty":1,"ask":null,"status":"sale","added":"2026-11-15","order":1794900000013},{"id":"namiEB05S","name":"Nami","num":"EB05-061","ver":"Secret Rare Alternate Art","set":"Extra Booster: One Piece Heroines Edition Vol. 2","kind":"raw","grade":"","qty":1,"ask":22.3,"status":"sale","added":"2026-11-19","order":1795600000000},{"id":"gloriosaEB05","name":"Gloriosa","num":"EB05-052","ver":"Super Rare Alternate Art","set":"Extra Booster: One Piece Heroines Edition Vol. 2","kind":"raw","grade":"","qty":1,"ask":24.07,"status":"sale","added":"2026-11-19","order":1795600000001},{"id":"nojikoEB05","name":"Nojiko","num":"EB05-057","ver":"Alternate Art","set":"Extra Booster: One Piece Heroines Edition Vol. 2","kind":"raw","grade":"","qty":1,"ask":22.71,"status":"sale","added":"2026-11-19","order":1795600000002},{"id":"afraidNE","name":"Are You That Afraid of the New Era?!!","num":"OP17-037","ver":"Alternate Art","set":"The World's Strongest Warriors","kind":"raw","grade":"","qty":1,"ask":38.0,"status":"sale","added":"2026-11-19","order":1795600000003},{"id":"satoriWP4","name":"Satori","num":"OP15-066","ver":"Winner Pack 2026 Vol. 4","set":"One Piece Promotion Cards","kind":"raw","grade":"","qty":1,"ask":5.45,"status":"sale","added":"2026-11-20","order":1795700000001},{"id":"luffyL79A","name":"Monkey.D.Luffy","num":"OP17-079","ver":"Alternate Art Leader (Super Leader Parallel)","set":"The World's Strongest Warriors","kind":"raw","grade":"","qty":1,"ask":27.9,"status":"sale","added":"2026-11-20","order":1795700000002},{"id":"rocksSECw","name":"Rocks.D.Xebec","num":"OP17-118","ver":"Secret Rare","set":"The World's Strongest Warriors","kind":"raw","grade":"","qty":1,"ask":11.61,"status":"sale","added":"2026-11-20","order":1795700000003},{"id":"donGold18","name":"DON!! Card","num":"DON!!","ver":"Gold Alternate Art (Luffy manga panel, Say that you want to live!)","set":"The Dominance of God","kind":"raw","grade":"","qty":1,"ask":6.39,"status":"sale","added":"2026-11-21","order":1795900000001},{"id":"mr0A18","name":"Mr.0 & Ms. All Sunday","num":"OP18-046","ver":"Super Rare Alternate Art","set":"The Dominance of God","kind":"raw","grade":"","qty":1,"ask":24.2,"status":"sale","added":"2026-11-21","order":1795900000002},{"id":"gunkoA18","name":"Saint Gunko","num":"OP18-084","ver":"Super Rare Alternate Art","set":"The Dominance of God","kind":"raw","grade":"","qty":1,"ask":24.69,"status":"sale","added":"2026-11-21","order":1795900000003},{"id":"kakuA18","name":"Kaku","num":"OP18-099","ver":"Rare Alternate Art","set":"The Dominance of God","kind":"raw","grade":"","qty":1,"ask":7.99,"status":"sale","added":"2026-11-21","order":1795900000004},{"id":"lokiT","name":"Loki","num":"OP17-119","ver":"Secret Rare","set":"The World's Strongest Warriors","kind":"raw","grade":"","qty":2,"ask":11.2,"status":"sale","added":"2026-11-21","order":1796000000000},{"id":"shamSEC18","name":"Saint Shamrock","num":"OP18-119","ver":"Secret Rare","set":"The Dominance of God","kind":"raw","grade":"","qty":1,"ask":34.99,"status":"sale","added":"2026-11-22","order":1796100000000},{"id":"mr2TR18","name":"Mr.2.Bon.Kurei(Bentham)","num":"OP18-049","ver":"Treasure Rare (TR)","set":"The Dominance of God","kind":"raw","grade":"","qty":1,"ask":43.89,"status":"sale","added":"2026-11-22","order":1796100000001},{"id":"robinA18","name":"Nico Robin","num":"OP18-031","ver":"Super Rare Alternate Art","set":"The Dominance of God","kind":"raw","grade":"","qty":1,"ask":42,"status":"sale","added":"2026-11-22","order":1796100000003},{"id":"luffyW161","name":"Monkey.D.Luffy","num":"P-161","ver":"OP18 4th Anniversary Release Event Winner","set":"One Piece Promotion Cards","kind":"raw","grade":"","qty":3,"ask":170,"status":"sale","added":"2026-11-22","order":1796100000004},{"id":"mr4A18","name":"Mr.4 & Miss.Merry Christmas","num":"OP18-051","ver":"Alternate Art","set":"The Dominance of God","kind":"raw","grade":"","qty":1,"ask":9.81,"status":"sale","added":"2026-11-22","order":1796100000005},{"id":"kakuA18b","name":"Kaku","num":"OP18-099","ver":"Rare Alternate Art","set":"The Dominance of God","kind":"raw","grade":"","qty":1,"ask":6.34,"status":"sale","added":"2026-11-22","order":1796100000006},{"id":"lokiA18","name":"Loki","num":"OP17-119","ver":"Secret Rare Alternate Art, The Dominance of God printing","set":"The Dominance of God","kind":"raw","grade":"","qty":1,"ask":24.34,"status":"sale","added":"2026-11-22","order":1796100000007},{"id":"leoPCC6","name":"Leo","num":"OP10-057","ver":"Premium Card Collection 6 assort Vol. 1","set":"One Piece Promotion Cards","kind":"raw","grade":"","qty":1,"ask":30.48,"status":"sale","added":"2026-11-22","order":1796200000000},{"id":"bonneyORP2","name":"Jewelry Bonney","num":"P-085","ver":"Offline Regional Participation Pack 2025 Vol. 2","set":"One Piece Promotion Cards","kind":"raw","grade":"","qty":1,"ask":10.19,"status":"sale","added":"2026-11-22","order":1796200000001},{"id":"chopperORP2","name":"Tony Tony.Chopper","num":"P-089","ver":"Offline Regional Participation Pack 2025 Vol. 2","set":"One Piece Promotion Cards","kind":"raw","grade":"","qty":1,"ask":20.73,"status":"sale","added":"2026-11-22","order":1796200000002},{"id":"gorgonWP3","name":"Gorgon Sisters","num":"OP14-105","ver":"Winner Pack 2026 Vol. 3","set":"One Piece Promotion Cards","kind":"raw","grade":"","qty":1,"ask":17.0,"status":"sale","added":"2026-11-22","order":1796200000003},{"id":"forFunBS6","name":"For Fun","num":"OP14-037","ver":"Premium Card Collection Best Selection Vol. 6","set":"One Piece Promotion Cards","kind":"raw","grade":"","qty":1,"ask":3.37,"status":"sale","added":"2026-11-22","order":1796200000004}],"updated":"2026-11-22T09:20:00.000Z","art":{"perona":"assets/f2f603db9e35f25211d2e2c3db26c7de.webp","zoro":"assets/6b05f1d144042c0d45ed4332f3156cac.webp","foxy":"assets/6cb0a66c0efd271588cb8e9ebac8939c.webp","gloriosa":"assets/fbdfbcbf8f1f6c1fcc6e2a399f20c418.webp","rocks":"assets/85efe53a3d3306f2a91bf64ed5939f2f.webp","buggy":"assets/9fb05151fa56207f52747f5ed0f0f14e.webp","peter":"assets/85f303c6d1dfe3cafb9c5e318f1a338e.webp","kalifa":"assets/024622b359b7d5d815fda4c0f91d32dd.webp","zeus":"assets/e94b205b617d0963c91fb2dd757b47f7.webp","luffy":"assets/2c6961ab83a8939351665b7bb4c76f0a.webp","disap":"assets/72d01d148200b9453911358ce079d82e.webp","rebeccaB":"assets/ca66dab1b7b9f4a7b1e9c93bbec7dd26.webp","onami":"assets/8223b2dc06cbca7af41637ece49ecc24.webp","sakazuki":"assets/926c2e0aba3f93e58a21a30b2b43e84e.webp","franky2":"assets/b172db857c64f491f177d5be8c68ffb1.webp","don":"assets/8bcb6b30a7297055fc38186e93673392.webp","maria":"assets/6a8357f5d5074c9fa588908638e5f13a.webp","loki":"assets/f75da9ac63bdc23b3496d3f9fefe61e5.webp","foxyL":"assets/65a00fee19d0e5f2f9fb19310312a6c2.webp","hancock3":"assets/d7c451c865024462586d626fadd0403d.webp","brook":"assets/98956e812e7a024319622a457f3ca0f7.webp","momo":"assets/27a7159b3dbc1788bf547bb89c0bad08.webp","stussy2":"assets/c672b7723905c9590713a0bd25edb6f3.webp","otama":"assets/a7a7fad2ab347181b62fb0ab5e039093.webp","nami2":"assets/270ae99dd133fcb768480f3c0c9f781a.webp","newgate":"assets/e9e1c6d1043af5b985500835f8808a19.webp","juurou":"assets/0f5f37bc592338cc7f3d40a747ee443a.webp","buggyL":"assets/c576efba508bb1d582dbdae1bad6ac6a.webp","mama":"assets/49cf4a3d3b53c373a4b34d6b2b1a00a9.webp","luffy12":"assets/cc0c27d08ef78612bd734185ae825abf.webp","king":"assets/dd1c4ecfa5049c2374f6279a07579a75.webp","croc":"assets/3469c74055fcb3bb4fd646a2e0324249.webp","teachS":"assets/716c4191d7a127e8a0233cfd11ae0199.webp","sanji":"assets/d04a193f545034cd2dd7b61343898646.webp","juurouB":"assets/c0997e79caa3440bc6ee30f5b60e9057.webp","usopp":"assets/46933578df23964b64f6308d2489ffc1.webp","newgateSP":"assets/e134d80da692f0ec1bab6e8e216569e5.webp","borsalino":"assets/f9c3d639b88f8532a54bb2f5ee149647.webp","zoroSP":"assets/838883c6fa1e188cf0b9b629fbc34b88.webp","shirahoshi":"assets/45d5670c35b970a2c4a85df2daf2fdda.webp","shiki":"assets/f02a242b65b994e1ca8882296eafb281.webp","zoroLA":"assets/cfa60c5dc6b083817267f461d4ae43aa.webp","law13":"assets/117ac8e0d8c323f923410e7f85481395.webp","boeuf":"assets/7771f458e577b1e5dece9b68fc8f4559.webp","divine":"assets/520538a8ed8c9a185f39a815e4bba8f5.webp","myera":"assets/b44bb06b652cae87400e05c5307c2a4e.webp","law10":"assets/3a76a6524ae8c1e87fab56f6fc9f27e1.webp","teach27":"assets/2708f010b8c9acabb2b4275a447f2b09.webp","buggySP":"assets/fcac22c343c6357bd616fb0393b61548.webp","namiC":"assets/1bdede4e34dcd9bd25f86f77dd273413.webp","namiPRB":"assets/04f5633db09602aa38c802375674db1d.webp","bonney2":"assets/605e24626a28282b2d02f45d603354f5.webp","bonney1":"assets/d70afe108456bf959e9ae4d7e1fd8867.webp","chopperA":"assets/291f9e92b1a48ecff3425c516e41e0ac.webp","hodyA":"assets/cd907d3d6444cd1af8067d55ae5b61bc.webp","benn":"assets/5cfc94116d158ae2eee7e100d09e36dd.webp","roger":"assets/bbd641a7520024bd174f526b889b86e7.webp","namiGift":"assets/996bbb701b9d16cbd43d5bcdb9c8843b.webp","chopper8":"assets/407fe502d1612356487c83343cec975d.webp","vivi":"assets/6a72369857bba281c9a426b7f7cf5658.webp","shiraA":"assets/4a204e87a361cb0148c8535277a7f54b.webp","boaL":"assets/f02b172686a398138b70e542e519f503.webp","s_fest":"assets/31a39439cf02b2d55920dfd091f7a3f0.webp","s_luffyEB":"assets/9d027c4aa0312e86f9c33cbe7ea88ee0.webp","s_sanji":"assets/e887401b650fe5fd142f53da29e412a8.webp","s_allsunday":"assets/4a84d5a9aef80e4d905f4c51ca1f6575.webp","s_demon":"assets/1c859a74a3ee137407efe82bbdb078d8.webp","s_chopper":"assets/161978794446f97e17f7113128829b60.webp","luffyW110":"assets/0a13af777bc559c57d41a138b32dabd6.webp","s_ace":"assets/06b0ec58f2862508136933d98467893b.webp","sakazukiM":"assets/d720b3111d7c01b6ee2540444d8916fb.webp","mihawkM":"assets/2e6036f99e04d6f59b615e131af01277.webp","s_nami":"assets/9c9445d96c2e7fe85d76083431df6035.webp","luffyW135":"assets/4c33c7dc8f160df52801592e6c407685.webp","boaW115":"assets/80154a4a573e95693e70ad670a437249.webp","t_luffyRD":"assets/55e88d1048303bdfc79bfd153ea88fc8.webp","t_brook":"assets/d68e597080e9ae265a1609c055090557.webp","t_sanji2":"assets/e38cb6bc7b62dcd5ec8eb98edefbd91c.webp","t_ace13":"assets/f386dd0308fa62ca606a89465d07fe7d.webp","chopW101":"assets/2191d554f02924fda4b10fabdb118853.webp","namiW102":"assets/e95ded28cde31d7cd68df38211ced3d4.webp","t_pre16":"assets/56e95df18baf22b80a2c493741120fe9.webp","t_bonney":"assets/8d73edb00e0d900d9edc163a3cca10df.webp","t_onami":"assets/babfabcc26859d5f7710f9952676e228.webp","t_ace2jp":"assets/4fff28010c3cba8822f4e4249cc530dc.webp","t_luffy2nd":"assets/54fb40e2860e83563e3bb010faa36dc5.webp","t_newgate":"assets/45491e17a22005f27433fe4d3a1d457a.webp","t_fest041":"assets/54c5ecc1b6a95c889e680c32bd99a189.webp","t_ace2":"assets/a277827a3f24e3ddc565a071fdfd712d.webp","t_mihawkM":"assets/5cea4b63ecc018cec2f43ec990512d57.webp","t_shanksS":"assets/ba9ae516bc43ac1a0645e7ee18ddab2a.webp","t_gear":"assets/08eb34506c874e225f2de36b51c9e049.webp","t_gear2":"assets/27eb26840d8aef3eb67509e0a3d89187.webp","t_buggyS":"assets/1c00871ff67acf349e42208c9e4eb8da.webp","t_boaM":"assets/911dd67e61fadb500821472bbdc1f7d1.webp","t_sanji25":"assets/4d374203e8f9d3f8a42161ea3af89682.webp","t_zoro1st":"assets/0f7c0c95b94b51b0076d7d300adfb48c.webp","t_myera":"assets/f41e2a24d49cbb19494da5f6808c655c.webp","linlinA":"assets/79b08f4a5f4798d38ed449e1c40dbe45.webp","t_frighten":"assets/b1abde9924923b498d8962db126c49f0.webp","tinShanks":"assets/c8f6c7f07180dab90ebc5f519a4468ab.webp","t_crossg":"assets/fbb5cbaeb304dc5b2471eadf971a0dc6.webp","t_comeon":"assets/d488d9629a21f48c47b822f35e57f10c.webp","tinLuffy":"assets/fc3d8817c06b4aaa227c627c0079824c.webp","tinBoaR":"assets/ab190e0668c76bb1e79f073ad213f8d7.webp","rocksSEC":"assets/185810cffd8059ef8a0b25b87c8d3706.webp","linlin112A":"assets/f0b7b74e4477a02774d295afd91d798c.webp","sugarA":"assets/23ec6e7989d522ea6a0073f1c851f758.webp","perona-op14-033":"assets/01c6ddc2a63cec56aa36b1bdf90a3a15.webp","mr2SEC":"assets/d305e3164c8feaa91543f457121a14f5.webp","violaA":"assets/85b8b7e29dc0a6113b4a925e2bd69974.webp","zehaA":"assets/c3f99a9b516396037132112aaf8e78d8.webp"},"photos":{},"syncedAt":"2026-11-22T09:30:00.000Z"}</script>
+<script id="app-script">(function(){
+"use strict";
+const FOLDER="1NOlyHc7LUPkutCNz7b_2NdmO6ECA_u-R";
+const LOGO="assets/fea52ca7112adc24ad0998d719c2c137.webp",MARK="assets/d33fc1ce2723b707d978aaa1853d08d6.webp";
+const SHEET="1JND5qqOV6Ma323FPtJl3pAqrSi9kBlMOnzOY_v2m0eQ";
+const SHOWS=[
+  {start:"2026-11-14",end:"2026-11-15",name:"SoCal Card Con",venue:"STC Rowland Legacy",address:"18993 Colima Rd, Rowland Heights, CA 91748",hours:"Sat and Sun, 10am to 5pm",note:"Free admission",ig:"socalcardcon"},
+  {start:"2026-12-12",end:"2026-12-13",name:"SoCal Card Con",venue:"STC Rowland Legacy",address:"18993 Colima Rd, Rowland Heights, CA 91748",hours:"Sat and Sun, hours to be announced",note:"",ig:"socalcardcon"}
+];
+function upcomingShows(){const d=new Date();const t=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");return SHOWS.filter(s=>s.end>=t)}
+function showDates(s){const p=x=>{const [y,m,d]=x.split("-").map(Number);return new Date(y,m-1,d)};const a=p(s.start),b=p(s.end);const mon=a.toLocaleDateString("en-US",{month:"short"}).toUpperCase();const mon2=b.toLocaleDateString("en-US",{month:"short"}).toUpperCase();const days=a.getTime()===b.getTime()?String(a.getDate()):mon===mon2?a.getDate()+" to "+b.getDate():a.getDate()+" "+mon+" to "+b.getDate()+" "+mon2;const wd=a.toLocaleDateString("en-US",{weekday:"short"})+(a.getTime()===b.getTime()?"":" and "+b.toLocaleDateString("en-US",{weekday:"short"}));return {mon,days,wd}}
+
+function showsHTML(){const list=upcomingShows();if(!list.length)return "";
+  return `<section class="shows" aria-labelledby="shows-h"><div class="wrap">
+    <div class="shows-head"><h2 id="shows-h">Find us at a show</h2><p>Come see the binder in person. DM ahead and we will set aside any card you want to see at our table.</p></div>
+    <ul class="show-list">${list.map(s=>{const d=showDates(s);return `<li class="show">
+      <div class="show-date" aria-hidden="true"><span class="sd-mon">${esc(d.mon)}</span><span class="sd-days">${esc(d.days)}</span></div>
+      <div class="show-body">
+        <h3>${esc(s.name)}</h3>
+        <p class="show-when">${esc(d.wd)} · ${esc(s.hours.replace(/^Sat and Sun, /,""))}</p>
+        <p class="show-where">${esc(s.venue)}<br><a href="https://www.google.com/maps/search/?api=1&amp;query=${encodeURIComponent(s.address)}" target="_blank" rel="noopener">${esc(s.address)}</a></p>
+        <p class="show-tags">${s.note?`<span class="tag">${esc(s.note)}</span>`:""}<a class="tag link" href="https://www.instagram.com/${esc(s.ig)}/" target="_blank" rel="noopener">@${esc(s.ig)}</a></p>
+      </div></li>`}).join("")}</ul>
+  </div></section>`}
+
+const IG="tablemate.tcg";
+const SHORT="https://tablematecards.com",SHORT_LABEL="tablematecards.com";
+const QR_SVG="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 29 29\" class=\"qr-svg\" role=\"img\" aria-label=\"QR code for tablematecards.com\"><path fill=\"#fff\" d=\"M0 0h29v29h-29z\"/><path class=\"qrline\" stroke=\"#000\" d=\"M2 2.5h7m3 0h1m2 0h2m3 0h7m-25 1h1m5 0h1m1 0h1m2 0h1m1 0h1m2 0h1m1 0h1m5 0h1m-25 1h1m1 0h3m1 0h1m1 0h4m2 0h3m1 0h1m1 0h3m1 0h1m-25 1h1m1 0h3m1 0h1m1 0h1m2 0h3m2 0h1m1 0h1m1 0h3m1 0h1m-25 1h1m1 0h3m1 0h1m3 0h1m1 0h1m3 0h1m1 0h1m1 0h3m1 0h1m-25 1h1m5 0h1m2 0h1m8 0h1m5 0h1m-25 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-17 1h1m2 0h1m2 0h1m1 0h1m-17 1h1m5 0h1m1 0h3m1 0h7m2 0h3m-23 1h1m5 0h1m7 0h1m3 0h5m-24 1h1m1 0h1m1 0h1m1 0h1m2 0h3m1 0h1m1 0h2m1 0h1m2 0h1m1 0h2m-25 1h2m2 0h2m2 0h1m1 0h2m5 0h3m1 0h1m2 0h1m-24 1h1m1 0h2m1 0h1m1 0h1m1 0h3m2 0h2m1 0h1m5 0h1m-25 1h2m3 0h1m3 0h2m1 0h1m2 0h2m2 0h1m3 0h1m-24 1h1m3 0h1m1 0h2m6 0h3m1 0h4m1 0h2m-25 1h1m2 0h2m3 0h2m4 0h1m4 0h1m1 0h2m1 0h1m-25 1h1m1 0h1m3 0h1m1 0h7m1 0h5m1 0h1m-15 1h1m1 0h2m2 0h1m1 0h1m3 0h1m-21 1h7m3 0h2m2 0h1m1 0h1m1 0h1m1 0h1m3 0h1m-25 1h1m5 0h1m4 0h1m2 0h3m3 0h1m-21 1h1m1 0h3m1 0h1m3 0h4m1 0h6m1 0h1m-23 1h1m1 0h3m1 0h1m2 0h1m1 0h1m1 0h6m4 0h2m-25 1h1m1 0h3m1 0h1m3 0h1m2 0h2m6 0h2m1 0h1m-25 1h1m5 0h1m4 0h2m3 0h2m1 0h2m3 0h1m-25 1h7m1 0h5m3 0h3m2 0h1m2 0h1\"/></svg>\n";
+const IG_PROFILE="https://www.instagram.com/"+IG+"/";
+const IG_DM="https://ig.me/m/"+IG;
+const HEAD='<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<title>Tablemate TCG Shop</title>\n<meta name="description" content="One Piece Card Game singles, PSA slabs, and sealed product from Tablemate TCG. DM @tablemate.tcg on Instagram to buy, sell, or trade.">\n<link rel="icon" href="assets/d33fc1ce2723b707d978aaa1853d08d6.webp">\n<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const money=n=>"$"+Number(n).toLocaleString("en-US",{minimumFractionDigits:Number(n)%1?2:0,maximumFractionDigits:2});
+const has=v=>v!=null&&v!=="";
+
+let STATE={items:[],updated:null,art:{},photos:{},syncedAt:null};
+try{STATE=Object.assign(STATE,JSON.parse($("#state").textContent))}catch(e){}
+STATE.art=STATE.art||{};STATE.photos=STATE.photos||{};
+
+const KIND_LABEL={raw:"Single",slab:"Graded",sealed:"Sealed"};
+let tab="all",sort="featured",q="",openId=null;
+try{const p=JSON.parse(localStorage.getItem("tm-shop")||"{}");if(p.sort&&p.sort!=="high"&&p.sort!=="low")sort=p.sort;if(p.tab)tab=p.tab}catch(e){}
+function remember(){try{localStorage.setItem("tm-shop",JSON.stringify({sort,tab}))}catch(e){}}
+
+/* owner state */
+let artifact=null,mcp=null,assets=null,isOwner=false,syncMsg="",syncBusy=false,pendingPublish=null,artQueue=0;
+
+/* personal collection: copies kept, never listed (id: number of copies kept) */
+/* mihawkM, boaW115 and perona-op14-033 are raw copies out at grading (Nov 16): hidden until they return */
+const PERSONAL={borsalino:1,mihawkM:1,boaW115:1,"perona-op14-033":1,t_zoro1st:1,sealed13:1,t_shanksS:1,t_buggyS:1,t_crossg:1,t_comeon:1,t_myera:1,t_boaM:1,t_frighten:1};
+/* most copies that can be for sale (Nov 16): one LEGO Luffy winner is at grading, four Teach SEC are in a deck */
+const MAXQTY={luffyW110:1,teachS:1};
+function items(){return STATE.items.map(c=>MAXQTY[c.id]&&(c.qty||0)>MAXQTY[c.id]?Object.assign({},c,{qty:MAXQTY[c.id]}):c).map(c=>PERSONAL[c.id]?Object.assign({},c,{qty:(c.qty||0)-PERSONAL[c.id]}):c).filter(c=>(c.qty||0)>0&&c.status!=="hold"&&c.status!=="grading"&&c.status!=="incoming"&&c.status!=="sold")}
+function hashOf(id){return "c-"+String(id).replace(/[^A-Za-z0-9-]/g,"-")}
+function byHash(h){return items().find(c=>hashOf(c.id)===h)}
+function img(c){const p=STATE.photos[c.id];if(p&&p.length)return p[0];return STATE.art[c.id]||null}
+function gallery(c){return [...(STATE.photos[c.id]||[]),...(STATE.art[c.id]?[STATE.art[c.id]]:[])]}
+function cleanVer(v){return String(v||"").replace(/\s*\(TCGplayer lists it as Parallel\)/i,"").replace(/,?\s*card only$/i,"")}
+function condition(c){return c.kind==="slab"?(c.grade||"Graded"):c.kind==="sealed"?"Factory sealed":"Raw, ungraded"}
+/* prices are hidden on the shop at the owner's request: every listing shows DM for price */
+function priceHTML(c,big){return `<span class="price ask${big?" big":""}">DM for price</span>`}
+
+function visible(){
+  const t=q.trim().toLowerCase();
+  let list=items().filter(c=>tab==="all"||c.kind===tab);
+  if(t)list=list.filter(c=>[c.name,c.num,c.ver,c.set,c.grade].join(" ").toLowerCase().includes(t));
+  const rank={slab:0,sealed:1,raw:2};
+  const priced=(a,b,dir)=>{const A=has(a.ask),B=has(b.ask);if(A!==B)return A?-1:1;if(!A)return 0;return dir*(a.ask-b.ask)};
+  list.sort((a,b)=>{
+    if(sort==="high")return priced(a,b,-1)||(a.order||0)-(b.order||0);
+    if(sort==="low")return priced(a,b,1)||(a.order||0)-(b.order||0);
+    if(sort==="new")return String(b.added||"").localeCompare(String(a.added||""))||(b.order||0)-(a.order||0);
+    if(sort==="name")return a.name.localeCompare(b.name)||a.num.localeCompare(b.num);
+    return rank[a.kind]-rank[b.kind]||(a.order||0)-(b.order||0);
+  });
+  return list;
+}
+
+function tileArt(c,cls){
+  const u=img(c);
+  if(u)return `<img class="${cls}" src="${esc(u)}" alt="${esc(c.name+" "+c.num)}" loading="lazy" decoding="async">`;
+  return `<div class="${cls} ph" aria-hidden="true"><span class="ph-num">${esc(c.num)}</span><span class="ph-name">${esc(c.name)}</span></div>`;
+}
+
+function cardHTML(c){
+  const badge=c.kind==="slab"?`<span class="grade">${esc(c.grade||"Graded")}</span>`:c.kind==="sealed"?`<span class="grade sealed">Sealed</span>`:"";
+  return `<li class="card">
+    <button type="button" class="card-btn" data-open="${esc(c.id)}" aria-label="${esc(c.name+" "+c.num+", view details")}">
+      <div class="art-wrap">${tileArt(c,"art")}${badge}${(c.qty||0)>1?`<span class="qty">${c.qty} available</span>`:""}</div>
+      <div class="meta">
+        <span class="num">${esc(c.num)}</span>
+        <span class="name">${esc(c.name)}</span>
+        <span class="ver">${esc(cleanVer(c.ver))}</span>
+        <span class="row">${priceHTML(c)}</span>
+      </div>
+    </button>
+  </li>`;
+}
+
+function counts(){const a=items();return {all:a.length,raw:a.filter(c=>c.kind==="raw").length,slab:a.filter(c=>c.kind==="slab").length,sealed:a.filter(c=>c.kind==="sealed").length}}
+
+function renderShell(){
+  const n=counts();
+  const upd=STATE.updated?new Date(STATE.updated).toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"}):"";
+  $("#root").innerHTML=`
+  <div id="ownerbar" class="ownerbar" hidden></div>
+  <header class="top">
+    <div class="wrap top-in">
+      <a class="brand" href="${IG_PROFILE}" target="_blank" rel="noopener">
+        <img class="mark" src="${MARK}" alt="" width="80" height="45">
+        <span class="word">Tablemate<span class="tcg">TCG</span></span>
+      </a>
+      <a class="btn ig" href="${IG_DM}" target="_blank" rel="noopener">${igIcon()}<span>DM @${IG}</span></a>
+    </div>
+  </header>
+  <section class="hero">
+    <div class="wrap hero-in">
+      <div class="hero-copy">
+        <p class="kicker">One Piece Card Game</p>
+        <h1>Singles, PSA slabs, and sealed product, ready to deal.</h1>
+        <p class="lede">Browse what is on the table right now. See something you like, or have cards to sell or trade? Send a DM on Instagram and we will work it out.</p>
+        <div class="hero-cta">
+          <a class="btn primary" href="${IG_DM}" target="_blank" rel="noopener">${igIcon()}<span>Message to buy or sell</span></a>
+          <a class="btn ghost" href="#trade">Buy, sell, or trade</a>
+          <a class="btn ghost" href="${IG_PROFILE}" target="_blank" rel="noopener">View @${IG}</a>
+        </div>
+      </div>
+      <div class="hero-side">
+      <img class="hero-logo" src="${LOGO}" alt="Tablemate TCG" width="640" height="585">
+      <dl class="stats">
+        <div><dt>Listings</dt><dd>${n.all}</dd></div>
+        <div><dt>Graded slabs</dt><dd>${n.slab}</dd></div>
+        <div><dt>Singles</dt><dd>${n.raw}</dd></div>
+        <div><dt>Sealed</dt><dd>${n.sealed}</dd></div>
+        ${upd?`<p class="updated">Inventory updated ${esc(upd)}</p>`:""}
+      </dl>
+      </div>
+    </div>
+  </section>
+  ${showsHTML()}
+  <main class="wrap shop" id="shop">
+    <div class="controls" role="search">
+      <div class="tabs" role="tablist" aria-label="Product type">
+        ${[["all","All"],["slab","Graded"],["raw","Singles"],["sealed","Sealed"]].map(([k,l])=>`<button type="button" role="tab" class="tab" data-tab="${k}" aria-selected="${tab===k}">${l}<span class="ct">${n[k]}</span></button>`).join("")}
+      </div>
+      <div class="tools">
+        <label class="search"><span class="sr">Search cards</span>
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 20l-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <input id="q" type="search" placeholder="Search name, card number, set" autocomplete="off" value="${esc(q)}">
+        </label>
+        <label class="sort"><span class="sr">Sort</span>
+          <select id="sort">
+            <option value="featured"${sort==="featured"?" selected":""}>Featured</option>
+            <option value="new"${sort==="new"?" selected":""}>Newest arrivals</option>
+            <option value="name"${sort==="name"?" selected":""}>Name A to Z</option>
+          </select>
+        </label>
+      </div>
+    </div>
+    <p class="count" id="count" aria-live="polite"></p>
+    <ul class="grid" id="grid"></ul>
+  </main>
+  <section class="sell" id="trade-slot">
+    <div class="wrap sell-in">
+      <div>
+        <h2>Selling or trading your cards?</h2>
+        <p>We buy One Piece singles, graded slabs, and sealed product, and we are always open to trades. Send photos and what you are looking for.</p>
+      </div>
+      <a class="btn primary" href="${IG_DM}" target="_blank" rel="noopener">${igIcon()}<span>Send a DM</span></a>
+    </div>
+  </section>
+  <section class="share" aria-labelledby="share-h">
+    <div class="wrap share-in">
+      <div class="qr-box">${QR_SVG}</div>
+      <div>
+        <h2 id="share-h">Share the shop</h2>
+        <p>Scan the code or send this link to a friend who is hunting for One Piece cards.</p>
+        <a class="share-link" href="${SHORT}" target="_blank" rel="noopener">${SHORT_LABEL}</a>
+        <div class="share-btns">
+          <button type="button" class="btn primary" data-share>Copy link</button>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer class="foot"><div class="wrap foot-in">
+    <span class="foot-brand"><img src="${MARK}" alt="" width="48" height="27">Tablemate TCG</span>
+    <span>Availability changes quickly at shows, so DM to confirm.</span>
+    <a href="${SHORT}" target="_blank" rel="noopener">${SHORT_LABEL}</a>
+    <a href="${IG_PROFILE}" target="_blank" rel="noopener">instagram.com/${IG}</a>
+  </div></footer>
+  <div class="modal" id="modal" hidden><div class="scrim" data-close></div><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="m-title" id="sheet"></div></div>
+  <div class="toast" id="toast" role="status" hidden></div>`;
+  renderGrid();renderOwner();
+}
+
+function renderGrid(){
+  const list=visible();
+  $("#count").textContent=list.length===items().length&&!q?`${list.length} listings`:`${list.length} of ${items().length} listings`;
+  $("#grid").innerHTML=list.length?list.map(cardHTML).join(""):`<li class="empty">Nothing matches that search. Try a card number like OP09 or a character name, or DM us to ask about a card you do not see.</li>`;
+  document.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.tab===tab)));
+}
+
+function dmText(c){return `Hi! I am interested in ${c.name} ${c.num} (${cleanVer(c.ver)}${c.kind==="slab"?", "+(c.grade||"graded"):""}). Is it still available?`}
+
+function openCard(id,push){
+  const c=items().find(x=>x.id===id);if(!c)return;
+  openId=id;
+  const g=gallery(c);
+  const rows=[["Card number",c.num],["Version",cleanVer(c.ver)],c.set?["Set",c.set]:null,["Condition",condition(c)],["Available",String(c.qty||1)]].filter(Boolean);
+  $("#sheet").innerHTML=`
+    <button type="button" class="x" data-close aria-label="Close">×</button>
+    <div class="m-grid">
+      <div class="m-art">
+        <div class="m-main">${g.length?`<img id="m-img" src="${esc(g[0])}" alt="${esc(c.name+" "+c.num)}">`:tileArt(c,"art big")}</div>
+        ${g.length>1?`<div class="thumbs">${g.map((u,i)=>`<button type="button" class="thumb${i?"":" on"}" data-thumb="${esc(u)}" aria-label="Photo ${i+1}"><img src="${esc(u)}" alt=""></button>`).join("")}</div>`:""}
+        ${g.length&&!(STATE.photos[c.id]||[]).length&&STATE.art[c.id]?`<p class="artnote">Stock image. DM for photos of this exact copy.</p>`:""}
+      </div>
+      <div class="m-info">
+        <p class="kicker">${esc(KIND_LABEL[c.kind]||"")}${c.kind==="slab"?" · "+esc(c.grade||""):""}</p>
+        <h2 id="m-title">${esc(c.name)}</h2>
+        <p class="m-ver">${esc(cleanVer(c.ver))}</p>
+        <div class="m-price">${priceHTML(c,true)}</div>
+        <dl class="specs">${rows.map(([k,v])=>`<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl>
+        <div class="m-cta">
+          <a class="btn primary wide" href="${IG_DM}" target="_blank" rel="noopener">${igIcon()}<span>DM @${IG} about this card</span></a>
+          <button type="button" class="btn ghost wide" data-copy="${esc(c.id)}">Copy a message to paste in your DM</button>
+          <button type="button" class="btn ghost wide" data-tr-wantcard="${esc(c.id)}">Make an offer to buy or trade</button>
+        </div>
+        <p class="fine">Tap DM to open Instagram, then paste the copied message so we know exactly which card you mean.</p>
+        ${ownerTools(c)}
+      </div>
+    </div>`;
+  $("#modal").hidden=false;document.body.classList.add("locked");
+  if(push!==false){try{history.replaceState(null,"","#"+hashOf(c.id))}catch(e){location.hash=hashOf(c.id)}}
+  setTimeout(()=>{const x=$("#sheet .x");x&&x.focus()},0);
+}
+function closeCard(){
+  openId=null;$("#modal").hidden=true;document.body.classList.remove("locked");
+  try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}
+}
+
+function toast(t){const el=$("#toast");if(!el)return;el.textContent=t;el.hidden=false;clearTimeout(toast._t);toast._t=setTimeout(()=>el.hidden=true,3200)}
+function igIcon(){return `<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.3" cy="6.7" r="1.2" fill="currentColor"/></svg>`}
+
+/* ---------- events ---------- */
+document.addEventListener("click",async e=>{
+  if(e.target.closest("[data-share]")){try{await navigator.clipboard.writeText(SHORT);toast("Link copied: "+SHORT_LABEL)}catch(err){toast("Share this link: "+SHORT_LABEL)}return}
+  const o=e.target.closest("[data-open]");if(o){openCard(o.dataset.open);return}
+  if(e.target.closest("[data-close]")){closeCard();return}
+  const t=e.target.closest("[data-tab]");if(t){tab=t.dataset.tab;remember();renderGrid();return}
+  const th=e.target.closest("[data-thumb]");if(th){const m=$("#m-img");if(m)m.src=th.dataset.thumb;document.querySelectorAll(".thumb").forEach(b=>b.classList.toggle("on",b===th));return}
+  const cp=e.target.closest("[data-copy]");if(cp){const c=items().find(x=>x.id===cp.dataset.copy);if(!c)return;
+    try{await navigator.clipboard.writeText(dmText(c));toast("Message copied. Paste it into your Instagram DM.")}
+    catch(err){toast("Copy did not work here. Mention "+c.name+" "+c.num+" in your DM.")}return}
+  const ow=e.target.closest("[data-owner]");if(ow){ownerAction(ow.dataset.owner,ow.dataset.id,ow);return}
+});
+document.addEventListener("input",e=>{if(e.target.id==="q"){q=e.target.value;renderGrid()}});
+document.addEventListener("change",e=>{
+  if(e.target.id==="sort"){sort=e.target.value;remember();renderGrid()}
+  if(e.target.id==="photo-in"){uploadPhotos(e.target.dataset.id,[...e.target.files]);e.target.value=""}
+});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&openId)closeCard()});
+window.addEventListener("hashchange",()=>{const h=location.hash.slice(1);const c=h&&byHash(h);if(c&&c.id!==openId)openCard(c.id,false);else if(!c&&openId)closeCard()});
+
+/* ---------- owner tools ---------- */
+function ownerTools(c){
+  if(!isOwner)return "";
+  const ph=STATE.photos[c.id]||[];
+  return `<div class="owner-tools">
+    <p class="ot-title">Owner only</p>
+    ${assets?`<label class="btn small" for="photo-in">Add your photos</label><input id="photo-in" type="file" accept="image/*" multiple data-id="${esc(c.id)}" class="sr">`:`<span class="ot-note">Photo uploads need editor access on claude.ai.</span>`}
+    ${ph.length?`<button type="button" class="btn small" data-owner="clearphotos" data-id="${esc(c.id)}">Remove your photos (${ph.length})</button>`:""}
+    ${STATE.art[c.id]?`<button type="button" class="btn small" data-owner="clearart" data-id="${esc(c.id)}">Remove stock image</button>`:""}
+    <span class="ot-note">Prices come from the Asking each column in your One Piece Inventory and Pricing sheet.</span>
+  </div>`;
+}
+function renderOwner(){
+  const bar=$("#ownerbar");if(!bar)return;
+  if(!isOwner){bar.hidden=true;return}
+  bar.hidden=false;
+  const when=STATE.syncedAt?new Date(STATE.syncedAt).toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}):"not yet";
+  const unpriced=items().filter(c=>!has(c.ask)).length;
+  bar.innerHTML=`<div class="wrap ob-in">
+    <span><b>Owner view.</b> Buyers do not see this bar. Last synced from your tracker: ${esc(when)}. Prices are hidden on the shop, so every listing shows DM for price.</span>
+    <span class="ob-msg">${esc(syncMsg)}</span>
+    ${mcp?`<button type="button" class="btn small" data-owner="sync"${syncBusy?" disabled":""}>${syncBusy?"Syncing…":"Sync from tracker"}</button>`:""}
+  </div>`;
+}
+async function ownerAction(kind,id){
+  if(kind==="sync"){syncFromDrive(true);return}
+  if(kind==="clearphotos"){delete STATE.photos[id];save("Your photos were removed.");return}
+  if(kind==="clearart"){delete STATE.art[id];save("Stock image removed.");return}
+}
+async function uploadPhotos(id,files){
+  if(!assets||!files.length)return;
+  toast("Uploading "+files.length+" photo"+(files.length>1?"s":"")+"…");
+  try{
+    const urls=[];
+    for(const f of files){const r=await assets.upload(await shrinkFile(f,1400));urls.push(r.url)}
+    STATE.photos[id]=[...(STATE.photos[id]||[]),...urls];
+    save("Photos added.");
+  }catch(e){toast("That upload did not go through. Try a smaller image or try again.")}
+}
+async function shrinkFile(f,max){
+  try{const bm=await createImageBitmap(f);const s=Math.min(1,max/Math.max(bm.width,bm.height));if(s===1&&f.size<1.5e6)return f;
+    const c=document.createElement("canvas");c.width=Math.round(bm.width*s);c.height=Math.round(bm.height*s);c.getContext("2d").drawImage(bm,0,0,c.width,c.height);
+    return await new Promise(r=>c.toBlob(b=>r(b||f),"image/jpeg",0.86));}catch(e){return f}
+}
+
+/* stock art import: the owner's Claude session posts images in, one per card */
+window.addEventListener("message",async e=>{
+  const d=e.data;if(!d||d.tm!=="tm-art"||!isOwner||!assets)return;
+  if(e.origin!=="https://claude.ai"&&e.origin!==location.origin)return;
+  if(typeof d.id!=="string"||typeof d.data!=="string"||!/^data:image\/(webp|jpeg|png);base64,/.test(d.data))return;
+  if(!STATE.items.some(c=>c.id===d.id))return;
+  artQueue++;
+  try{const m=d.data.match(/^data:([^;]+);base64,(.*)$/);const bin=atob(m[2]);const u8=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u8[i]=bin.charCodeAt(i);const blob=new Blob([u8],{type:m[1]});const r=await assets.upload(blob);STATE.art[d.id]=r.url;
+    try{e.source&&e.source.postMessage({tm:"tm-art-ok",id:d.id},e.origin)}catch(_){}}
+  catch(err){try{e.source&&e.source.postMessage({tm:"tm-art-fail",id:d.id,err:String(err&&err.code||err)},e.origin)}catch(_){}}
+  artQueue--;
+  if(!artQueue){clearTimeout(pendingPublish);pendingPublish=setTimeout(()=>save(null,true),4000)}
+});
+
+/* ---------- saving: publish the page with new embedded state ---------- */
+function buildDoc(){
+  const json=JSON.stringify(STATE).replace(/</g,"\\u003c");
+  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n'+HEAD+'\n'
+    +'<style id="app-style">'+$("#app-style").textContent+'</style>\n</head>\n<body>\n<div id="root"></div>\n'
+    +'<script type="application/json" id="state">'+json+'<\/script>\n'
+    +'<script id="app-script">'+$("#app-script").textContent+'<\/script>\n</body>\n</html>';
+}
+async function save(msg,quiet){
+  if(!artifact){toast("Open this page on claude.ai to save changes.");return}
+  if(msg)toast(msg+" Saving…");
+  try{await artifact.publish(buildDoc())}
+  catch(e){const c=e&&e.code;if(c==="conflict")return;if(!quiet||c)toast(c==="not_granted"||c==="not_writer"?"This view cannot save changes.":"That change was not saved. Try again.")}
+}
+
+/* ---------- sync from the tracker's Drive feed ---------- */
+function filesOf(p){
+  if(typeof p==="string"){try{p=JSON.parse(p)}catch(e){return []}}
+  if(Array.isArray(p))return p;
+  if(!p||typeof p!=="object")return [];
+  for(const k of ["files","items","results","data"])if(Array.isArray(p[k]))return p[k];
+  return [];
+}
+function decodeB64(b64){const bin=atob(b64);const u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return new TextDecoder("utf-8").decode(u)}
+function errText(c){
+  return c==="server_not_connected"?"Google Drive is not connected to this Claude account. Add it in Settings, Connectors.":
+    c==="needs_reauth"?"Google Drive needs to be reconnected in Settings, Connectors.":
+    c==="approval_required"||c==="consent_required"?"Click Sync from tracker and allow Google Drive when asked.":
+    c==="not_in_manifest"||c==="blocked_by_policy"?"Google Drive is turned off for this page. Allow it from the page permissions.":
+    c==="selection_required"?"Choose which Google Drive account to use when asked, then sync again.":
+    "Could not reach the tracker feed. Try Sync from tracker again.";
+}
+async function download(fileId,mime){
+  const dl=await mcp.callTool("Google Drive","download_file_content",mime?{fileId,exportMimeType:mime}:{fileId},{cache:false});
+  const p=dl&&dl.payload;const b64=p&&typeof p==="object"?p.content:null;
+  if(!b64)throw {code:"shape"};
+  return decodeB64(b64);
+}
+/* 1) the tracker's full feed in the Drive folder, when the tracker publishes one */
+async function readFeed(){
+  const res=await mcp.callTool("Google Drive","search_files",{query:"parentId = '"+FOLDER+"' and trashed = false",excludeContentSnippets:true,pageSize:25},{cache:false});
+  const files=filesOf(res&&res.payload).filter(f=>f&&f.id&&/feed/i.test(f.title||f.name||""));
+  if(!files.length)return null;
+  files.sort((a,b)=>String(b.modifiedTime||b.createdTime||"").localeCompare(String(a.modifiedTime||a.createdTime||"")));
+  const feed=JSON.parse(await download(files[0].id));
+  return feed&&Array.isArray(feed.items)?feed:null;
+}
+/* 2) the tracker's Google Sheet: Asking each, Qty and Status by ID */
+function parseCSV(t){const rows=[];let row=[],f="",i=0,qd=false;t=t.replace(/^﻿/,"");
+  while(i<t.length){const ch=t[i];
+    if(qd){if(ch==='"'){if(t[i+1]==='"'){f+='"';i+=2;continue}qd=false;i++;continue}f+=ch;i++;continue}
+    if(ch==='"'){qd=true;i++;continue}if(ch===","){row.push(f);f="";i++;continue}
+    if(ch==="\r"){i++;continue}if(ch==="\n"){row.push(f);rows.push(row);row=[];f="";i++;continue}f+=ch;i++}
+  if(f!==""||row.length){row.push(f);rows.push(row)}return rows}
+const STATUS_IN={"for sale":"sale","price check":"check","keeping":"hold","at grading":"grading","in transit":"incoming","sold out":"sold"};
+const KIND_IN={raw:"raw",slab:"slab",sealed:"sealed"};
+async function readSheet(){
+  const rows=parseCSV(await download(SHEET,"text/csv"));
+  const h=(rows.shift()||[]).map(x=>x.trim().toLowerCase());
+  const col=n=>h.findIndex(x=>x.startsWith(n));
+  const ci={id:col("id"),name:col("name"),num:col("card number"),ver:col("version"),kind:col("type"),grade:col("grade"),qty:col("qty"),ask:col("asking"),status:col("status")};
+  if(ci.id<0||ci.ask<0)throw {code:"headers"};
+  const num=x=>{x=String(x==null?"":x).replace(/[$,\s]/g,"");if(x==="")return null;const n=parseFloat(x);return isFinite(n)?Math.round(n*100)/100:null};
+  return rows.filter(r=>r[ci.id]&&r[ci.id].trim()).map(r=>({id:r[ci.id].trim(),name:ci.name>=0?r[ci.name]:"",num:ci.num>=0?r[ci.num]:"",ver:ci.ver>=0?r[ci.ver]:"",kind:KIND_IN[String(r[ci.kind]||"").trim().toLowerCase()]||"raw",grade:ci.grade>=0?r[ci.grade]:"",qty:num(r[ci.qty]),ask:num(r[ci.ask]),status:STATUS_IN[String(r[ci.status]||"").trim().toLowerCase()]||"sale"}));
+}
+function mergeSheet(rows){
+  const by=new Map(STATE.items.map(c=>[c.id,Object.assign({},c)]));let max=Math.max(0,...STATE.items.map(c=>c.order||0));
+  for(const r of rows){const c=by.get(r.id);
+    if(c){c.ask=r.ask;if(r.qty!=null)c.qty=r.qty;c.status=r.status;if(r.name)c.name=r.name;if(r.num)c.num=r.num;if(r.ver)c.ver=r.ver;c.kind=r.kind||c.kind;c.grade=r.grade||""}
+    else if(r.name)by.set(r.id,{id:r.id,name:r.name,num:r.num,ver:r.ver,set:"",kind:r.kind,grade:r.grade||"",qty:r.qty==null?1:r.qty,ask:r.ask,status:r.status,added:new Date().toISOString().slice(0,10),order:++max});}
+  return [...by.values()].sort((a,b)=>(a.order||0)-(b.order||0));
+}
+async function syncFromDrive(manual){
+  if(!mcp||syncBusy)return;
+  syncBusy=true;syncMsg=manual?"Checking your tracker…":"";renderOwner();
+  try{
+    let next=null,stamp=null,feed=null;
+    try{feed=await readFeed()}catch(e){if(e&&e.code&&e.code!=="tool_error"&&e.code!=="shape")throw e}
+    if(feed&&(!STATE.updated||!feed.updated||feed.updated>STATE.updated)){next=feed.items;stamp=feed.updated}
+    else if(!feed){next=mergeSheet(await readSheet());stamp=new Date().toISOString()}
+    if(!next||JSON.stringify(next)===JSON.stringify(STATE.items)){STATE.syncedAt=STATE.syncedAt||null;syncMsg=manual?"Already up to date with your tracker.":"";throw {quiet:true}}
+    STATE.items=next;STATE.updated=stamp||new Date().toISOString();STATE.syncedAt=new Date().toISOString();
+    syncMsg="Updated from your tracker. Publishing…";renderOwner();
+    await save(null,true);
+  }catch(e){
+    if(!(e&&e.quiet))syncMsg=e&&e.code==="headers"?"The sheet's header row changed. Keep ID and Asking each as column names.":errText(e&&e.code);
+  }
+  syncBusy=false;renderOwner();
+}
+
+/* ---------- boot ---------- */
+renderShell();
+/* trade and sell offer form lives in trade.js and trade.css beside this page */
+window.__tm={$,esc,items,cleanVer,tileArt,priceHTML,toast,closeCard,igIcon,IG_DM,get STATE(){return STATE}};
+{const l=document.createElement("link");l.rel="stylesheet";l.href="trade.css";document.head.appendChild(l);const s=document.createElement("script");s.src="trade.js";s.defer=true;document.head.appendChild(s);}
+{const h=location.hash.slice(1);const c=h&&byHash(h);if(c)openCard(c.id,false)}
+(async()=>{
+  if(!(window.claude&&window.claude.use))return;
+  let user=null;
+  try{user=await window.claude.use("user")}catch(e){}
+  try{isOwner=!!(user&&await user.isOwner())}catch(e){isOwner=false}
+  if(!isOwner)return;
+  try{artifact=await window.claude.use("artifact")}catch(e){}
+  try{assets=await window.claude.use("assets")}catch(e){}
+  try{mcp=await window.claude.use("mcp")}catch(e){}
+  renderOwner();
+  if(openId)openCard(openId,false);
+  if(mcp)syncFromDrive(false);
+})();
+})();
+</script>
+</body>
+</html>
