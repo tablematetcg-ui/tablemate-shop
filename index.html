@@ -205,6 +205,7 @@ const LOGO="assets/fea52ca7112adc24ad0998d719c2c137.webp",MARK="assets/d33fc1ce2
 const SHEET="1JND5qqOV6Ma323FPtJl3pAqrSi9kBlMOnzOY_v2m0eQ";
 const SHOWS=[
   {start:"2026-11-14",end:"2026-11-15",name:"SoCal Card Con",venue:"STC Rowland Legacy",address:"18993 Colima Rd, Rowland Heights, CA 91748",hours:"Sat and Sun, 10am to 5pm",note:"Free admission",ig:"socalcardcon"},
+  {start:"2026-12-05",end:"2026-12-05",name:"AKI Collectibles Show",venue:"Haven City Market",address:"989 S Glendora Ave, West Covina, CA 91790",hours:"Saturday, 11am to 7pm",note:"Table I-04",ig:""},
   {start:"2026-12-12",end:"2026-12-13",name:"SoCal Card Con",venue:"STC Rowland Legacy",address:"18993 Colima Rd, Rowland Heights, CA 91748",hours:"Sat and Sun, hours to be announced",note:"",ig:"socalcardcon"}
 ];
 function upcomingShows(){const d=new Date();const t=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");return SHOWS.filter(s=>s.end>=t)}
@@ -219,7 +220,7 @@ function showsHTML(){const list=upcomingShows();if(!list.length)return "";
         <h3>${esc(s.name)}</h3>
         <p class="show-when">${esc(d.wd)} · ${esc(s.hours.replace(/^Sat and Sun, /,""))}</p>
         <p class="show-where">${esc(s.venue)}<br><a href="https://www.google.com/maps/search/?api=1&amp;query=${encodeURIComponent(s.address)}" target="_blank" rel="noopener">${esc(s.address)}</a></p>
-        <p class="show-tags">${s.note?`<span class="tag">${esc(s.note)}</span>`:""}<a class="tag link" href="https://www.instagram.com/${esc(s.ig)}/" target="_blank" rel="noopener">@${esc(s.ig)}</a></p>
+        <p class="show-tags">${s.note?`<span class="tag">${esc(s.note)}</span>`:""}${s.ig?`<a class="tag link" href="https://www.instagram.com/${esc(s.ig)}/" target="_blank" rel="noopener">@${esc(s.ig)}</a>`:""}</p>
       </div></li>`}).join("")}</ul>
   </div></section>`}
 
